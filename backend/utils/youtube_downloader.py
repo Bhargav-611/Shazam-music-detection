@@ -17,9 +17,13 @@ def download_youtube_audio(youtube_url, output_dir):
         ],
     }
 
+    print(f"Downloading audio from YouTube URL: {youtube_url}")
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(youtube_url, download=True)
         filename = ydl.prepare_filename(info)
         wav_path = os.path.splitext(filename)[0] + ".wav"
+        
+    print(f"Downloaded and converted audio to: {wav_path}")
 
     return wav_path, info.get("title", "Unknown")

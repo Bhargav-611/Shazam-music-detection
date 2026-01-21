@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
+import { convertToWav } from '../utils/wavConverter';
 import './SongRecognition.css';
 
 function SongRecognition() {
@@ -44,12 +45,20 @@ function SongRecognition() {
         chunks.push(e.data);
       };
 
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-        const url = URL.createObjectURL(blob);
-        setAudioBlob(blob);
+      mediaRecorder.onstop = async () => {
+        const webmBlob = new Blob(chunks, { type: 'audio/webm' });
+
+        const wavBlob = await convertToWav(webmBlob);
+        const wavFile = new File([wavBlob], "recording.wav", {
+          type: "audio/wav"
+        });
+
+        const url = URL.createObjectURL(wavBlob);
+
+        setAudioBlob(wavFile);
         setAudioUrl(url);
         setSelectedFile(null);
+
       };
 
       mediaRecorder.start();
@@ -196,7 +205,7 @@ function SongRecognition() {
           <input
             type="file"
             id="audio-file"
-            accept="audio/*"
+            accept=".wav"
             onChange={handleFileChange}
             disabled={loading || recording}
             style={{ display: 'none' }}

@@ -21,4 +21,6 @@ def match_fingerprints(clip_fingerprints):
     best_song_id = max(song_match_count, key=song_match_count.get)
     best_score = song_match_count[best_song_id]
 
+    print(f"Best match song_id: {best_song_id} with score: {best_score}")
+
     return best_song_id, best_score, song_match_count

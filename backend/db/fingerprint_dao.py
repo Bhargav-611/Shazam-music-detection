@@ -12,17 +12,17 @@ class FingerprintDAO:
         return bytes.fromhex(h)
 
     @staticmethod
-    def insert_song(title, audio_url=None):
+    def insert_song(audio_url, title=None, status="PENDING"):
         conn = get_connection()
         cur = conn.cursor()
 
         cur.execute(
             """
-            INSERT INTO songs (title, audio_url)
-            VALUES (%s, %s)
+            INSERT INTO songs (title, audio_url, status)
+            VALUES (%s, %s, %s)
             RETURNING id
             """,
-            (title, audio_url)
+            (title, audio_url, status)
         )
 
         song_id = cur.fetchone()[0]
@@ -131,20 +131,26 @@ class FingerprintDAO:
     def query_hashes_bulk(hash_list):
         """
         hash_list: list of HEX STRINGS
+        DB hash column: BYTEA
         """
         conn = get_connection()
         cur = conn.cursor()
 
+        print("Querying bulk hashes:", hash_list[:5])
+
+        # Convert hex strings to bytes (CORRECT for BYTEA)
         hash_bytes_list = [bytes.fromhex(h) for h in hash_list]
 
         query = """
             SELECT hash, song_id, time_offset
             FROM fingerprints
-            WHERE hash = ANY(%s)
+            WHERE hash = ANY(%s::bytea[])
         """
 
         cur.execute(query, (hash_bytes_list,))
         results = cur.fetchall()
+
+        print("Database returned matches:", len(results))
 
         cur.close()
         conn.close()

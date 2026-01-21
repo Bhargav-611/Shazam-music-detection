@@ -1,17 +1,18 @@
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const api = {
   // Upload YouTube song
   async uploadYouTube(url) {
     try {
-      console.log('Sending request to:', `${API_BASE_URL}/upload-youtube`);
+      // console.log('Sending request to:', `${API_BASE_URL}/upload-youtube`);
+      console.log('Sending request to:', `${API_BASE_URL}/add-youtube`);
       console.log('Payload:', { youtube_url: url });
       
       // Add timeout to prevent hanging (increased to 30 seconds)
       const controller = new AbortController();
       // const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
       
-      const response = await fetch(`${API_BASE_URL}/upload-youtube`, {
+      const response = await fetch(`${API_BASE_URL}/add-youtube`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,8 +55,12 @@ export const api = {
   // Recognize song from audio file
   async recognizeSong(audioFile) {
     const formData = new FormData();
-    formData.append('audio_file', audioFile, audioFile.name || 'recording.webm');
-    
+    formData.append(
+      'audio_file',
+      audioFile,
+      audioFile.name?.endsWith('.wav') ? audioFile.name : 'recording.wav'
+    );
+
     const response = await fetch(`${API_BASE_URL}/recognize-song`, {
       method: 'POST',
       body: formData,
