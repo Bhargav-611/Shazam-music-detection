@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://swara-backend-hy54.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const api = {
   // Upload YouTube song

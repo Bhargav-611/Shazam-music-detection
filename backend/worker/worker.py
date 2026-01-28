@@ -46,11 +46,11 @@ while True:
 
         print("Downloaded audio to:", audio_path)
 
-        fingerprints = main_pipeline(audio_path, song_id=song_id)
+        fingerprints = main_pipeline(audio_path, youtube_url=youtube_url, song_id=song_id)
 
         print(title)
 
-        FingerprintDAO.insert_fingerprints(song_id, fingerprints)
+        print("Updating song status to COMPLETED")
 
         conn = get_connection()
         cur = conn.cursor()

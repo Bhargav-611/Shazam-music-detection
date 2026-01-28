@@ -38,27 +38,42 @@ class FingerprintDAO:
         conn = get_connection()
         cur = conn.cursor()
 
+        # 🔥 TEMP TABLE MUST BE CREATED PER CONNECTION
+        cur.execute("""
+            CREATE TEMP TABLE IF NOT EXISTS fingerprints_stage (
+                hash_hex TEXT,
+                song_id INT,
+                time_offset DOUBLE PRECISION
+            ) ON COMMIT PRESERVE ROWS;
+        """)
+
         buffer = io.StringIO()
 
-        for h, t in fingerprints:
-            # 🔴 h looks like '\xf6\x85\xc9...'
-            # Convert it to HEX safely
-            hex_hash = h.encode("latin1").hex()
+        print("Inserting fingerprints for song_id:", song_id)
 
-            buffer.write(
-                f"\\x{hex_hash}\t{int(song_id)}\t{float(t)}\n"
-            )
-        print(repr(buffer.getvalue().splitlines()[0]))
+        for h, t in fingerprints:
+            buffer.write(f"{h}\t{song_id}\t{float(t)}\n")
 
         buffer.seek(0)
-        print(repr(buffer.getvalue().splitlines()[0]))
 
         cur.copy_from(
             buffer,
-            "fingerprints",
+            "fingerprints_stage",
             sep="\t",
-            columns=("hash", "song_id", "time_offset")
+            columns=("hash_hex", "song_id", "time_offset")
         )
+
+        print("Finished copying fingerprints to stage table.")
+
+        cur.execute("""
+            INSERT INTO fingerprints (hash, song_id, time_offset)
+            SELECT decode(hash_hex, 'hex'), song_id, time_offset
+            FROM fingerprints_stage;
+        """)
+
+        print("Inserted fingerprints from stage to main table.")
+
+        cur.execute("TRUNCATE fingerprints_stage;")
 
         conn.commit()
         cur.close()
