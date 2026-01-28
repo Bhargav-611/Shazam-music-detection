@@ -1,3 +1,4 @@
+import os
 import time
 from db.fingerprint_dao import FingerprintDAO
 from db.connection import get_connection
@@ -73,3 +74,9 @@ while True:
         conn.commit()
         cur.close()
         conn.close()
+
+    finally:
+        # ✅ DELETE AUDIO FILE
+        if audio_path and os.path.exists(audio_path):
+            os.remove(audio_path)
+
