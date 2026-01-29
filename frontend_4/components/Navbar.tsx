@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import ShazamModal from "./ShazamModal";
+import Image from "next/image";
+import { motion } from "framer-motion";
+
+const MotionImage = motion.create(Image);;
+
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -31,7 +35,7 @@ export default function Navbar() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between h-16 sm:h-20">
                     {/* Logo */}
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <motion.img
+                        <MotionImage
                             src="/logo.png"
                             alt="Swara Logo"
                             width={32}

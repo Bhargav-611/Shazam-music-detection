@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import YouTubeUpload from "./YouTubeUpload";
 import SongRecognition from "./SongRecognition";
+import Image from "next/image";
 
 interface ShazamModalProps {
     isOpen: boolean;
@@ -53,10 +54,12 @@ export default function ShazamModal({ isOpen, onClose }: ShazamModalProps) {
                                             }}
                                             className="w-12 h-12 rounded-xl overflow-hidden"
                                         >
-                                            <img
+                                            <Image
                                                 src="/logo.png"
                                                 alt="Swara Logo"
                                                 className="w-full h-full object-contain"
+                                                width={48}
+                                                height={48}
                                             />
                                         </motion.div>
                                         <div>

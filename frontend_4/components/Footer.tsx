@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -10,10 +10,12 @@ export default function Footer() {
                     {/* Brand Column */}
                     <div>
                         <div className="flex items-center gap-3 mb-4">
-                            <img
+                            <Image
                                 src="/logo.png"
                                 alt="Swara Logo"
                                 className="w-10 h-10"
+                                width={40}
+                                height={40}
                             />
                             <h3
                                 className="text-2xl font-bold"
