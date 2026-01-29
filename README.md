@@ -227,6 +227,8 @@ This project is open source and available under the MIT License.
 
 **Bhargav**
 - GitHub: [@Bhargav-611](https://github.com/Bhargav-611)
+**Tilak**
+- GitHub: [@Tilak-1604](https://github.com/Tilak-1604)
 
 ---
 
