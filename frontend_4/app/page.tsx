@@ -80,7 +80,7 @@ export default function Home() {
                             className="pt-8"
                         >
                             <p className="text-white/60 mb-4">
-                                Click "Find Song" in the navigation above to get started
+                                Click &quot;Find Song&quot; in the navigation above to get started
                             </p>
                         </motion.div>
 
